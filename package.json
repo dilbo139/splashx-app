@@ -1,0 +1,37 @@
+{
+  "name": "splashx-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "author": "Team Splash<splash-official@protonmail.com>",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "prettier": "prettier -write",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@chakra-ui/icons": "^2.0.19",
+    "@chakra-ui/layout": "^2.1.19",
+    "@chakra-ui/react": "^2.6.1",
+    "@chakra-ui/transition": "^2.0.16",
+    "@emotion/react": "^11.11.0",
+    "@emotion/styled": "^11.11.0",
+    "@fontsource/figtree": "^4.5.3",
+    "@fontsource/poppins": "^4.5.10",
+    "@types/node": "20.1.2",
+    "@types/react": "18.2.6",
+    "@types/react-dom": "18.2.4",
+    "eslint": "8.40.0",
+    "eslint-config-next": "^13.4.1",
+    "framer-motion": "^10.12.10",
+    "next": "13.4.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-lorem-ipsum": "^1.4.10",
+    "typescript": "5.0.4"
+  },
+  "devDependencies": {
+    "prettier": "^2.8.8"
+  }
+}
