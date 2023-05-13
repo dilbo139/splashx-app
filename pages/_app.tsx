@@ -3,6 +3,7 @@ import { ChakraProvider, extendTheme, ThemeConfig } from "@chakra-ui/react";
 import { ThemeProvider } from "@emotion/react";
 import type { AppProps } from "next/app";
 import Layout from "../components/layouts/Layout";
+import { ThirdwebProvider } from "@thirdweb-dev/react";
 
 import "@fontsource/figtree/400.css";
 import "@fontsource/figtree/500.css";
@@ -35,12 +36,16 @@ const chakraTheme: ThemeConfig = extendTheme({
   },
 });
 
+const activeChain = "mumbai";
+
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <ChakraProvider resetCSS theme={chakraTheme}>
-      <Layout title="SplashX - Earn by Creating & Watching AI-generated Anime">
-        <Component {...pageProps} />
-      </Layout>
-    </ChakraProvider>
+    <ThirdwebProvider activeChain={activeChain}>
+      <ChakraProvider resetCSS theme={chakraTheme}>
+        <Layout title="SplashX - Earn by Creating & Watching AI-generated Anime">
+          <Component {...pageProps} />
+        </Layout>
+      </ChakraProvider>
+    </ThirdwebProvider>
   );
 }
