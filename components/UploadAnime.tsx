@@ -26,6 +26,10 @@ import React from "react";
 type Props = {};
 
 const UploadAnime = (props: Props) => {
+  const [title, setTitle] = React.useState("");
+  const [description, setDescription] = React.useState("");
+  const [maxSupply, setMaxSupply] = React.useState(0);
+
   return (
     <Box p={10}>
       <Box>
