@@ -33,7 +33,7 @@ export default async function handler(
   let contract: any;
   if (req.method === "POST") {
     try {
-      const { contractName, primarySaleRecipient, metadata, id: videoId } = req.body;
+      const { contractName, primarySaleRecipient, metadata } = req.body;
       deployedAddress = await deployContract(contractName, primarySaleRecipient);
       contract = await getContract(deployedAddress, "nft-drop");
 
@@ -42,10 +42,18 @@ export default async function handler(
         where: { walletAddress: primarySaleRecipient }
       }) as User
 
-      const upsertUser = await prisma.video.upsert({
-        where: { id: user?.id },
+      const upsertVideo = await prisma.video.upsert({
+        where: { url: metadata.animation_url },
         update: {},
-        create: { title: metadata.name, description: metadata.description, url: metadata.animation_url, metadata: metadata, thumbnail: metadata.image, userId: user.id },
+        create: {
+          title: metadata.name,
+          description: metadata.description,
+          url: metadata.animation_url,
+          metadata: metadata,
+          thumbnail: metadata.image,
+          userId: user.id,
+          contractAddress: deployedAddress
+        },
       })
 
       return res.status(200).json({ message: deployedAddress });

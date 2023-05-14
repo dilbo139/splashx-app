@@ -23,7 +23,8 @@ import {
   chakra,
 } from "@chakra-ui/react";
 
-import { useStorage } from "@thirdweb-dev/react";
+import { useAddress, useStorage } from "@thirdweb-dev/react";
+import axios from "axios";
 
 type Props = {};
 
@@ -34,13 +35,18 @@ const UploadAnime = (props: Props) => {
   const [pricePerNFT, setPricePerNFT] = useState(0);
   const [video, setVideo] = useState<File | null>(null);
 
+  const [loading, setLoading] = useState(false);
+
   const storage = useStorage();
+  const address = useAddress();
 
   const videoImage = "https://bit.ly/2Z4KKcF";
 
-  async function uploadAndGenerate() {
+  async function uploadAndGenerate(e: any): Promise<void> {
+    e.preventDefault();
     try {
       // upload video to IPFS
+      setLoading(true);
       const uri = await storage?.upload(video);
       // create metadata structure
       const metadata = {
@@ -53,6 +59,18 @@ const UploadAnime = (props: Props) => {
       // upload metadata to IPFS
       const metadataURI = await storage?.upload(metadata);
       // upload video IPFS URI + metadata to db
+      const requestBody = {
+        contractName: title,
+        primarySaleRecipient: address,
+        metadata,
+      };
+      const res = await axios.post("/api/generate-anime", requestBody);
+      setTitle("");
+      setDescription("");
+      setMaxSupply(0);
+      setPricePerNFT(0);
+      setVideo(null);
+      setLoading(false);
     } catch (err: unknown) {
       console.error(err);
     }
@@ -86,6 +104,7 @@ const UploadAnime = (props: Props) => {
               overflow={{
                 sm: "hidden",
               }}
+              onSubmit={uploadAndGenerate}
             >
               <Stack
                 px={4}
@@ -156,7 +175,7 @@ const UploadAnime = (props: Props) => {
                           color: "gray.50",
                         }}
                       >
-                        Price Per NFT
+                        Price Per NFT (Matic)
                       </FormLabel>
                       <InputGroup size="sm">
                         <Input
@@ -270,19 +289,26 @@ const UploadAnime = (props: Props) => {
                             },
                           }}
                         >
-                          <span>Upload a file</span>
-                          <VisuallyHidden>
-                            <input
-                              id="file-upload"
-                              name="file-upload"
-                              type="file"
-                              onChange={(e) =>
-                                e.target.files && setVideo(e.target.files[0])
-                              }
-                            />
-                          </VisuallyHidden>
+                          {video ? (
+                            <span>{video.name}</span>
+                          ) : (
+                            <>
+                              <span>Upload a file</span>
+                              <VisuallyHidden>
+                                <input
+                                  id="file-upload"
+                                  name="file-upload"
+                                  type="file"
+                                  onChange={(e) =>
+                                    e.target.files &&
+                                    setVideo(e.target.files[0])
+                                  }
+                                />
+                              </VisuallyHidden>
+                              <Text pl={1}>or drag and drop</Text>
+                            </>
+                          )}
                         </chakra.label>
-                        <Text pl={1}>or drag and drop</Text>
                       </Flex>
                       <Text
                         fontSize="xs"
@@ -320,9 +346,8 @@ const UploadAnime = (props: Props) => {
                   _hover={{
                     opacity: 0.8,
                   }}
-                  onClick={() => uploadAndGenerate()}
                 >
-                  Generate & Upload
+                  {loading ? "Loading..." : "Generate & Upload"}
                 </Button>
               </Box>
             </chakra.form>

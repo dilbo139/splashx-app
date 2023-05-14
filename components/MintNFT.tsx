@@ -50,10 +50,10 @@ export default function MintNFT() {
             </VStack>
             <VStack alignItems={"flex-start"}>
               <Text fontSize={"md"} fontWeight={"bold"} color={"brand.gray"}>
-                Price Per NFT
+                Price Per NFT (Matic)
               </Text>
               <Text fontSize={"md"} fontWeight={"bold"} color={"brand.white"}>
-                3 Eth
+                100 Matic
               </Text>
             </VStack>
           </HStack>
