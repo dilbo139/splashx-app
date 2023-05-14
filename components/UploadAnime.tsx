@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   Box,
   Text,
@@ -21,14 +22,41 @@ import {
   VisuallyHidden,
   chakra,
 } from "@chakra-ui/react";
-import React from "react";
+
+import { useStorage } from "@thirdweb-dev/react";
 
 type Props = {};
 
 const UploadAnime = (props: Props) => {
-  const [title, setTitle] = React.useState("");
-  const [description, setDescription] = React.useState("");
-  const [maxSupply, setMaxSupply] = React.useState(0);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [maxSupply, setMaxSupply] = useState(0);
+  const [pricePerNFT, setPricePerNFT] = useState(0);
+  const [video, setVideo] = useState<File | null>(null);
+
+  const storage = useStorage();
+
+  const videoImage = "https://bit.ly/2Z4KKcF";
+
+  async function uploadAndGenerate() {
+    try {
+      // upload video to IPFS
+      const uri = await storage?.upload(video);
+      // create metadata structure
+      const metadata = {
+        name: title,
+        image: videoImage,
+        external_url: "https://splashxapp.vercel.app",
+        description: description,
+        animation_url: uri,
+      };
+      // upload metadata to IPFS
+      const metadataURI = await storage?.upload(metadata);
+      // upload video IPFS URI + metadata to db
+    } catch (err: unknown) {
+      console.error(err);
+    }
+  }
 
   return (
     <Box p={10}>
@@ -86,6 +114,7 @@ const UploadAnime = (props: Props) => {
                         focusBorderColor="brand.400"
                         rounded="md"
                         bgColor={"white"}
+                        onChange={(e) => setTitle(e.target.value)}
                       />
                     </InputGroup>
                   </FormControl>
@@ -112,6 +141,9 @@ const UploadAnime = (props: Props) => {
                           focusBorderColor="brand.400"
                           rounded="md"
                           bgColor={"white"}
+                          onChange={(e) =>
+                            setMaxSupply(parseInt(e.target.value))
+                          }
                         />
                       </InputGroup>
                     </FormControl>
@@ -133,6 +165,9 @@ const UploadAnime = (props: Props) => {
                           focusBorderColor="brand.400"
                           rounded="md"
                           bgColor={"white"}
+                          onChange={(e) =>
+                            setPricePerNFT(parseInt(e.target.value))
+                          }
                         />
                       </InputGroup>
                     </FormControl>
@@ -161,6 +196,7 @@ const UploadAnime = (props: Props) => {
                       fontSize={{
                         sm: "sm",
                       }}
+                      onChange={(e) => setDescription(e.target.value)}
                     />
                   </FormControl>
                 </div>
@@ -240,6 +276,9 @@ const UploadAnime = (props: Props) => {
                               id="file-upload"
                               name="file-upload"
                               type="file"
+                              onChange={(e) =>
+                                e.target.files && setVideo(e.target.files[0])
+                              }
                             />
                           </VisuallyHidden>
                         </chakra.label>
@@ -281,6 +320,7 @@ const UploadAnime = (props: Props) => {
                   _hover={{
                     opacity: 0.8,
                   }}
+                  onClick={() => uploadAndGenerate()}
                 >
                   Generate & Upload
                 </Button>

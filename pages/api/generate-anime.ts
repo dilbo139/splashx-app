@@ -1,6 +1,8 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
+import prisma from "@/lib/prisma";
+import { User } from "@prisma/client";
 
 type Data = {};
 
@@ -28,15 +30,29 @@ export default async function handler(
 ) {
   // Deploy contract
   let deployedAddress: string;
+  let contract: any;
   if (req.method === "POST") {
-    const { contractName, primarySaleRecipient } = req.body;
-    deployedAddress = await deployContract(contractName, primarySaleRecipient);
+    try {
+      const { contractName, primarySaleRecipient, metadata, id: videoId } = req.body;
+      deployedAddress = await deployContract(contractName, primarySaleRecipient);
+      contract = await getContract(deployedAddress, "nft-drop");
 
-    // create metadata and upload to IPFS
+      // upload video IPFS URI + metadata to db
+      const user = await prisma.user.findUnique({
+        where: { walletAddress: primarySaleRecipient }
+      }) as User
 
+      const upsertUser = await prisma.video.upsert({
+        where: { id: user?.id },
+        update: {},
+        create: { title: metadata.name, description: metadata.description, url: metadata.animation_url, metadata: metadata, thumbnail: metadata.image, userId: user.id },
+      })
 
-    return res.status(200).json({ message: deployedAddress });
+      return res.status(200).json({ message: deployedAddress });
+
+    } catch (err: unknown) {
+      return res.status(500).json({ message: err });
+    }
   }
-
-
+  return res.setHeader("Allow", ["POST"]).status(405).end(`Method ${req.method} Not Allowed`);
 }
