@@ -19,19 +19,19 @@ import { ConnectWallet } from "@thirdweb-dev/react";
 // import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 
 const Links = [
-  { name: "Home", param: "/" },
-  { name: "Generate Anime", param: "/generateAnime" },
-  { name: "Watch Anime", param: "/watchAnime" },
-  { name: "My Animes", param: "/myAnimes" },
+  { name: "Home", href: "/" },
+  { name: "Generate Anime", href: "/generateAnime" },
+  { name: "Watch Anime", href: "/watchAnime" },
+  { name: "My Animes", href: "/myAnimes" },
 ];
 
 const NavLink = ({
   children,
-  param,
+  href,
   name,
 }: {
   children?: ReactNode;
-  param: string;
+  href: string;
   name: string;
 }) => (
   <Link
@@ -42,7 +42,7 @@ const NavLink = ({
       textDecoration: "none",
       bg: useColorModeValue("gray", "gray"),
     }}
-    href={`${param}`}
+    href={href}
   >
     {name}
   </Link>
@@ -85,11 +85,7 @@ export default function Simple() {
                 display={{ base: "none", md: "flex" }}
               >
                 {Links.map((link) => (
-                  <NavLink
-                    key={link.name}
-                    param={link.param}
-                    name={link.name}
-                  />
+                  <NavLink key={link.name} href={link.href} name={link.name} />
                 ))}
               </HStack>
             </HStack>
@@ -130,7 +126,7 @@ export default function Simple() {
           <Box pb={4} display={{ md: "none" }}>
             <Stack as={"nav"} spacing={4}>
               {Links.map((link) => (
-                <NavLink key={link.name} param={link.param} name={link.name} />
+                <NavLink key={link.name} href={link.href} name={link.name} />
               ))}
             </Stack>
           </Box>
