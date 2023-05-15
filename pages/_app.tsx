@@ -4,6 +4,7 @@ import { ThemeProvider } from "@emotion/react";
 import type { AppProps } from "next/app";
 import Layout from "../components/layouts/Layout";
 import { ThirdwebProvider } from "@thirdweb-dev/react";
+import { ScrollAlphaTestnet, Mumbai } from "@thirdweb-dev/chains";
 
 import "@fontsource/figtree/400.css";
 import "@fontsource/figtree/500.css";
@@ -36,7 +37,7 @@ const chakraTheme: ThemeConfig = extendTheme({
   },
 });
 
-const activeChain = "mumbai";
+const activeChain = ScrollAlphaTestnet;
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (

@@ -1,6 +1,18 @@
 import { Box, Button, HStack, Text, VStack } from "@chakra-ui/react";
+import {
+  Web3Button,
+  useAddress,
+  useClaimNFT,
+  useContract,
+} from "@thirdweb-dev/react";
+
+const contractAddress = "0x99Da10B3633FfEba24951c4f42689841ed21f148";
 
 export default function MintNFT() {
+  const { contract } = useContract(contractAddress);
+  const { mutate: claimNft, isLoading, error } = useClaimNFT(contract);
+  const address = useAddress();
+
   return (
     <Box>
       <HStack justifyContent={"space-between"} width={"95%"}>
@@ -59,7 +71,7 @@ export default function MintNFT() {
           </HStack>
         </VStack>
         <Box>
-          <Button
+          {/* <Button
             bgGradient="linear(to-l,  brand.darkBlue,#012b9e,)"
             rounded={"lg"}
             color={"white"}
@@ -68,7 +80,23 @@ export default function MintNFT() {
             _hover={{ bg: "blue.400" }}
           >
             Mint Anime as NFT
-          </Button>
+          </Button> */}
+          <Web3Button
+            contractAddress={contractAddress}
+            action={() =>
+              claimNft({
+                to: address, // Use useAddress hook to get current wallet address
+                quantity: 1,
+              })
+            }
+            style={{
+              background: "linear-gradient(to left,#3D89E5,#012b9e)",
+              color: "white",
+              fontWeight: 700,
+            }}
+          >
+            Mint Anime as NFT
+          </Web3Button>
         </Box>
       </HStack>
     </Box>

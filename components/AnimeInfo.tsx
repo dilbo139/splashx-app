@@ -10,11 +10,17 @@ import {
   Stack,
 } from "@chakra-ui/react";
 
-{
-  /* <Image src="/images/globe.png" boxSize={"fit-content"} /> */
-}
+// {
+//   /* <Image src="/images/globe.png" boxSize={"fit-content"} /> */
+// }
 
-export default function AnimeInfo() {
+export default function AnimeInfo({
+  title,
+  description,
+}: {
+  title?: string;
+  description?: string;
+}) {
   return (
     <Box>
       <Flex flexDirection={"column"} width={"95%"}>

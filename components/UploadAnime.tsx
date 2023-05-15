@@ -23,8 +23,12 @@ import {
   chakra,
 } from "@chakra-ui/react";
 
-import { useAddress, useStorage } from "@thirdweb-dev/react";
+import { useAddress, useContract, useStorage } from "@thirdweb-dev/react";
 import axios from "axios";
+import { useRouter } from "next/router";
+import { useLazyMint } from "@thirdweb-dev/react";
+
+const contractAddress = "0x99Da10B3633FfEba24951c4f42689841ed21f148";
 
 type Props = {};
 
@@ -39,8 +43,12 @@ const UploadAnime = (props: Props) => {
 
   const storage = useStorage();
   const address = useAddress();
+  const router = useRouter();
 
   const videoImage = "https://bit.ly/2Z4KKcF";
+
+  const { contract } = useContract(contractAddress);
+  const { mutateAsync: lazyMint, isLoading, error } = useLazyMint(contract);
 
   async function uploadAndGenerate(e: any): Promise<void> {
     e.preventDefault();
@@ -65,12 +73,19 @@ const UploadAnime = (props: Props) => {
         metadata,
       };
       const res = await axios.post("/api/generate-anime", requestBody);
+
+      await lazyMint({
+        // Metadata of the NFTs to upload
+        metadatas: [{ ...metadata }],
+      });
+
       setTitle("");
       setDescription("");
       setMaxSupply(0);
       setPricePerNFT(0);
       setVideo(null);
       setLoading(false);
+      router.push("/");
     } catch (err: unknown) {
       console.error(err);
     }
