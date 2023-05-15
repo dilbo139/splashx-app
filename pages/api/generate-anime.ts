@@ -12,7 +12,7 @@ const sdk = ThirdwebSDK.fromPrivateKey(
 );
 
 async function deployContract(contractName: string, primarySaleRecipient: string) {
-  const deployedAddress = await sdk.deployer.deployEditionDrop({
+  const deployedAddress = await sdk.deployer.deployNFTDrop({
     name: contractName,
     primary_sale_recipient: primarySaleRecipient,
   });

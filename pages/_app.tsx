@@ -37,7 +37,7 @@ const chakraTheme: ThemeConfig = extendTheme({
   },
 });
 
-const activeChain = ScrollAlphaTestnet;
+const activeChain = Mumbai;
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (

@@ -27,8 +27,9 @@ import { useAddress, useContract, useStorage } from "@thirdweb-dev/react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useLazyMint } from "@thirdweb-dev/react";
+import { CONTRACT_ADDRESS } from "@/utils/constants";
 
-const contractAddress = "0x99Da10B3633FfEba24951c4f42689841ed21f148";
+const contractAddress = CONTRACT_ADDRESS;
 
 type Props = {};
 
